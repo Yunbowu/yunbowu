@@ -1,0 +1,13 @@
+name: Keep Hugging Face Container Alive
+
+on:
+  schedule:
+     - cron: '0 0 * * *'  # 每天午夜触发
+
+jobs:
+  keep_alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Keep Container Alive
+        run: |
+          curl -X GET https://rogerxavier-payhook.hf.space
