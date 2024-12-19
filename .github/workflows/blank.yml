@@ -10,4 +10,4 @@ jobs:
     steps:
       - name: Keep Container Alive
         run: |
-          curl -X GET https://rogerxavier-payhook.hf.space
+          curl -X GET https://lsfstar-yunbowu.hf.space
