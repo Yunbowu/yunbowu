@@ -1,0 +1,27 @@
+name: Check and Restart yunbowu Space
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'  # 每3h检查一次,一个月8*30*6<2000(普通账户限制)
+  workflow_dispatch:  # 允许手动触发
+jobs:
+  check-space-status:
+    runs-on: ubuntu-latest
+    env:
+      SPACE_NAME: "lsfstar/yunbowu"
+      TOKEN: "${{ secrets.HF_SPACE_API_TOKEN }}"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Check Space Status
+        id: check_status
+        run: |
+          response=$(curl -s -H "Authorization: Bearer $TOKEN" "https://huggingface.co/api/spaces/$SPACE_NAME")
+          stage=$(echo "$response" | jq -r '.runtime.stage')
+          echo "Space stage: $stage"
+          echo "::set-output name=stage::$stage"
+      - name: Check Space Status and restart
+        if: steps.check_status.outputs.stage != 'RUNNING'
+        run: |
+          echo "Restarting the space..."
+          curl -X POST -H "Authorization: Bearer $TOKEN" "https://huggingface.co/api/spaces/$SPACE_NAME/restart"
