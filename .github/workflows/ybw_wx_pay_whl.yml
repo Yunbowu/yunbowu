@@ -1,4 +1,4 @@
-name: Check and Restart iizhiApi Space
+name: Check and Restart ybw_wx_pay_whl Space
 
 on:
   schedule:
